@@ -3,9 +3,9 @@
   "private": true,
   "workspaces": ["packages/*"],
   "scripts": {
-    "build": "npm run -w @stream/ui build",
-    "storybook": "npm run -w @stream/ui storybook",
-    "build-storybook": "npm run -w @stream/ui build-storybook",
+    "build": "npm run -w @xiaofeng19920506/ui build",
+    "storybook": "npm run -w @xiaofeng19920506/ui storybook",
+    "build-storybook": "npm run -w @xiaofeng19920506/ui build-storybook",
     "lint": "echo 'add eslint later'",
     "format": "echo 'add prettier later'",
     "test": "echo 'no tests yet'"
