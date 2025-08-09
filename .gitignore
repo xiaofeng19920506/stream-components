@@ -1,0 +1,12 @@
+node_modules
+dist
+.next
+out
+.turbo
+.DS_Store
+.vercel
+coverage
+*.log
+
+
+

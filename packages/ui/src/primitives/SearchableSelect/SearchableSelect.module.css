@@ -1,0 +1,8 @@
+.root { display: grid; gap: 6px; }
+.label { font-weight: 600; }
+.input { padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; }
+.list { border: 1px solid var(--border-color); border-radius: 6px; padding: 6px; background: #fff; max-height: 180px; overflow: auto; }
+.item { padding: 6px 8px; border-radius: 6px; cursor: pointer; }
+.item:hover { background: #f6fbfe; }
+
+

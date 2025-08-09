@@ -1,0 +1,7 @@
+.text { margin: 0; color: var(--font-color); }
+.muted { color: var(--gray-font-color); }
+.title { font-size: 20px; font-weight: 700; color: #111; }
+.small { font-size: 12px; }
+
+
+

@@ -1,0 +1,7 @@
+{
+  "buildCommand": "npm ci && npm run -w @stream/ui build-storybook",
+  "outputDirectory": "packages/ui/storybook-static"
+}
+
+
+

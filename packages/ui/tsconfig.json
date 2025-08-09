@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "declaration": true,
+    "declarationDir": "dist",
+    "emitDeclarationOnly": false,
+    "noEmit": false,
+    "types": ["node", "vite/client"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext"
+  },
+  "include": ["src"]
+}
+
+
