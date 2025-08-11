@@ -13,6 +13,8 @@ export type TableProps<T extends object> = {
   initialSortBy?: { index: number; direction: "asc" | "desc" };
   pageSizeOptions?: number[];
   initialPageSize?: number;
+  onRowClick?: (row: T, rowIndex: number) => void;
+  showPageSizeSelector?: boolean;
 };
 
 export function Table<T extends object>({
@@ -21,6 +23,8 @@ export function Table<T extends object>({
   initialSortBy,
   pageSizeOptions = [5, 10, 20],
   initialPageSize = 5,
+  onRowClick,
+  showPageSizeSelector = true,
 }: TableProps<T>) {
   const [sort, setSort] = React.useState<{
     index: number;
@@ -61,6 +65,12 @@ export function Table<T extends object>({
     });
   };
 
+  const handleRowClick = (row: T, rowIndex: number) => {
+    if (onRowClick) {
+      onRowClick(row, rowIndex);
+    }
+  };
+
   return (
     <div>
       <table className={styles.table}>
@@ -84,7 +94,11 @@ export function Table<T extends object>({
         </thead>
         <tbody>
           {pageRows.map((row, ri) => (
-            <tr key={ri}>
+            <tr
+              key={ri}
+              onClick={() => handleRowClick(row, pageStart + ri)}
+              className={onRowClick ? styles.clickableRow : undefined}
+            >
               {columns.map((c, ci) => (
                 <td key={ci}>
                   {typeof c.accessor === "function"
@@ -97,6 +111,24 @@ export function Table<T extends object>({
         </tbody>
       </table>
       <div className={styles.paginationBar}>
+        {showPageSizeSelector && (
+          <div className={styles.pageSizeContainer}>
+            <select
+              className={styles.pageSize}
+              value={pageSize}
+              onChange={(e) => {
+                setPageSize(Number(e.target.value));
+                setPageIndex(0);
+              }}
+            >
+              {pageSizeOptions.map((opt) => (
+                <option key={opt} value={opt}>
+                  {opt} / page
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
         <div className={styles.pager}>
           <button
             className={styles.pageBtn}
@@ -112,7 +144,7 @@ export function Table<T extends object>({
           >
             ‹ Prev
           </button>
-          <span>
+          <span className={styles.pageInfo}>
             Page {pageIndex + 1} / {pageCount}
           </span>
           <button
@@ -130,22 +162,15 @@ export function Table<T extends object>({
             Last »
           </button>
         </div>
-        <div>
-          <select
-            className={styles.pageSize}
-            value={pageSize}
-            onChange={(e) => {
-              setPageSize(Number(e.target.value));
-              setPageIndex(0);
-            }}
-          >
-            {pageSizeOptions.map((opt) => (
-              <option key={opt} value={opt}>
-                {opt} / page
-              </option>
-            ))}
-          </select>
-        </div>
+        {showPageSizeSelector && (
+          <div className={styles.pageSizeContainer}>
+            <span className={styles.pageSizeInfo}>
+              Showing {pageStart + 1}-
+              {Math.min(pageStart + pageSize, sortedData.length)} of{" "}
+              {sortedData.length} items
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );
