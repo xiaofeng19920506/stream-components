@@ -98,6 +98,7 @@ export function Table<T extends object>({
               key={ri}
               onClick={() => handleRowClick(row, pageStart + ri)}
               className={onRowClick ? styles.clickableRow : undefined}
+              style={onRowClick ? { cursor: "pointer" } : undefined}
             >
               {columns.map((c, ci) => (
                 <td key={ci}>
