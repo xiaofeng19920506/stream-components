@@ -6,7 +6,7 @@
 .label {
   font-weight: 600;
   font-size: 14px;
-  color: var(--text-color, #374151);
+  color: #374151;
 }
 .inputWrapper {
   position: relative;
@@ -14,17 +14,16 @@
 }
 .input {
   padding: 8px 10px;
-  border: 1px solid var(--border-color, #d1d5db);
+  border: 1px solid #d1d5db;
   border-radius: 6px;
   width: 100%;
   box-sizing: border-box;
   font-size: 14px;
   background: white;
-  cursor: pointer;
 }
 .input:focus {
   outline: none;
-  border-color: var(--primary-color, #3b82f6);
+  border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 .list {
@@ -32,7 +31,7 @@
   top: 100%;
   left: 0;
   right: 0;
-  border: 1px solid var(--border-color, #d1d5db);
+  border: 1px solid #d1d5db;
   border-top: none;
   border-radius: 0 0 6px 6px;
   padding: 6px;
