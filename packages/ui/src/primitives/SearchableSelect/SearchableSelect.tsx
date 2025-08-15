@@ -23,7 +23,7 @@ export function SearchableSelect({
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Find the selected option to display
-  const selectedOption = options.find(option => option.value === value);
+  const selectedOption = options.find((option) => option.value === value);
   const displayValue = selectedOption ? selectedOption.label : query;
 
   const filtered = React.useMemo(() => {
@@ -34,7 +34,10 @@ export function SearchableSelect({
   // Handle click outside to close dropdown
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -60,7 +63,7 @@ export function SearchableSelect({
     const newValue = e.target.value;
     setQuery(newValue);
     setIsOpen(true);
-    
+
     // Clear selection if user is typing
     if (newValue !== selectedOption?.label) {
       onChange(null);
@@ -97,6 +100,7 @@ export function SearchableSelect({
           onChange={handleInputChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          readOnly={isOpen}
         />
         {isOpen && (
           <div className={styles.list}>
@@ -110,11 +114,12 @@ export function SearchableSelect({
                 {opt.label}
               </div>
             ))}
-            {filtered.length === 0 && <div className={styles.item}>No results</div>}
+            {filtered.length === 0 && (
+              <div className={styles.item}>No results</div>
+            )}
           </div>
         )}
       </div>
     </div>
   );
 }
-
