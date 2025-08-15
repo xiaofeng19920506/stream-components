@@ -22,15 +22,6 @@ export function SearchableSelect({
   const [isOpen, setIsOpen] = React.useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  console.log(
-    "SearchableSelect render - isOpen:",
-    isOpen,
-    "options:",
-    options.length,
-    "value:",
-    value
-  );
-
   // Ensure component starts with dropdown closed
   useEffect(() => {
     setIsOpen(false);
@@ -86,7 +77,6 @@ export function SearchableSelect({
 
   // Handle option selection
   const handleOptionClick = (option: SearchableOption) => {
-    console.log("SearchableSelect: Option clicked -", option.label);
     onChange(option.value);
     setQuery(option.label);
     setIsOpen(false);
@@ -94,7 +84,6 @@ export function SearchableSelect({
 
   // Handle focus
   const handleFocus = () => {
-    console.log("SearchableSelect: Focus event - opening dropdown");
     setIsOpen(true);
     if (!selectedOption) {
       setQuery("");
