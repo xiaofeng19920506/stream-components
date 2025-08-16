@@ -43,18 +43,18 @@ export function SearchableSelect({
     (option) => option && option.value === value
   );
   const displayValue =
-    selectedOption && selectedOption.label ? selectedOption.label : query;
+    selectedOption && selectedOption.label && typeof selectedOption.label === "string" 
+      ? selectedOption.label 
+      : query;
 
   const filtered = React.useMemo(() => {
     const q = query.toLowerCase();
     return options.filter((o) => {
-      // Ensure o.label exists and is a string before calling toLowerCase
-      return (
-        o &&
-        o.label &&
-        typeof o.label === "string" &&
-        o.label.toLowerCase().includes(q)
-      );
+      // Ensure o exists, has a label property, and label is a string
+      if (!o || !o.label || typeof o.label !== "string") {
+        return false;
+      }
+      return o.label.toLowerCase().includes(q);
     });
   }, [query, options]);
 
