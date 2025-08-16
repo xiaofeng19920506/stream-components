@@ -1,57 +1,218 @@
-# @xiaofeng19920506/ui
+# Stream Components UI Library
 
-Private React component library with consistent tokens and CSS Modules.
+A React component library with consistent design tokens and CSS Modules.
 
-![GitHub Packages](https://img.shields.io/badge/GitHub%20Packages-private-success)
+## Installation
 
-## Install
-
-1. Make sure your npm is configured for GitHub Packages (per-user or project-level):
-
-```
-@xiaofeng19920506:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=YOUR_GITHUB_PAT
+```bash
+npm install @xiaofeng19920506/ui
 ```
 
-2. Install the package:
+## Components
 
-```
-npm i @xiaofeng19920506/ui
+### SearchableSelect
+
+A searchable dropdown component with support for action buttons.
+
+```tsx
+import { SearchableSelect } from '@xiaofeng19920506/ui';
+
+const options = [
+  { label: 'Option 1', value: '1' },
+  { label: 'Option 2', value: '2' },
+  { label: 'Option 3', value: '3' },
+];
+
+// Basic usage
+<SearchableSelect
+  options={options}
+  value={selectedValue}
+  onChange={setSelectedValue}
+  placeholder="Search options..."
+/>
+
+// With action button when input is empty
+<SearchableSelect
+  options={options}
+  value={selectedValue}
+  onChange={setSelectedValue}
+  placeholder="Search options..."
+  showEmptyAction={true}
+  emptyActionIcon={<PlusIcon />}
+  onEmptyActionClick={() => console.log('Add new option')}
+/>
+
+// With input action button (when there's a value or query)
+<SearchableSelect
+  options={options}
+  value={selectedValue}
+  onChange={setSelectedValue}
+  placeholder="Search options..."
+  inputActionIcon={<ClearIcon />}
+  onInputActionClick={() => setSelectedValue(null)}
+/>
+
+// With legacy option action icons
+const optionsWithActions = [
+  { 
+    label: 'Option 1', 
+    value: '1',
+    actionIcon: <EditIcon />,
+    onActionClick: (option) => console.log('Edit', option)
+  },
+  { 
+    label: 'Option 2', 
+    value: '2',
+    actionIcon: <DeleteIcon />,
+    onActionClick: (option) => console.log('Delete', option)
+  },
+];
+
+<SearchableSelect
+  options={optionsWithActions}
+  value={selectedValue}
+  onChange={setSelectedValue}
+  showActionIcons={true}
+/>
+
+// With enhanced option actions (multiple actions per option)
+const optionsWithEnhancedActions = [
+  {
+    label: 'Option 1',
+    value: '1',
+    actions: [
+      {
+        icon: <EditIcon />,
+        onClick: (option) => console.log('Edit', option),
+        title: 'Edit option'
+      },
+      {
+        icon: <DeleteIcon />,
+        onClick: (option) => console.log('Delete', option),
+        title: 'Delete option'
+      }
+    ]
+  }
+];
+
+// With default actions applied to all options
+<SearchableSelect
+  options={options}
+  value={selectedValue}
+  onChange={setSelectedValue}
+  showOptionActions={true}
+  defaultActions={[
+    {
+      icon: <EditIcon />,
+      onClick: (option) => console.log('Edit', option),
+      title: 'Edit option'
+    },
+    {
+      icon: <DeleteIcon />,
+      onClick: (option) => console.log('Delete', option),
+      title: 'Delete option',
+      disabled: option.value === '1' // Disable for specific options
+    }
+  ]}
+/>
 ```
 
-Peer deps: React 17/18.
+#### Props
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `options` | `SearchableOption[]` | Array of options to display |
+| `value` | `string \| null` | Currently selected value |
+| `onChange` | `(value: string \| null) => void` | Callback when selection changes |
+| `label` | `string` | Optional label above the input |
+| `placeholder` | `string` | Placeholder text for the input |
+| `showActionIcons` | `boolean` | Show legacy action icons on each option |
+| `inputActionIcon` | `React.ReactNode` | Icon to show when there's a value or query |
+| `onInputActionClick` | `() => void` | Callback for input action icon click |
+| `emptyActionIcon` | `React.ReactNode` | Icon to show when input is empty |
+| `onEmptyActionClick` | `() => void` | Callback for empty action icon click |
+| `showEmptyAction` | `boolean` | Enable empty action button functionality |
+| `showOptionActions` | `boolean` | Enable enhanced option actions |
+| `defaultActions` | `Action[]` | Default actions to apply to all options |
+
+#### SearchableOption Type
+
+```tsx
+type SearchableOption = {
+  label: string;
+  value: string;
+  // Legacy action support
+  actionIcon?: React.ReactNode;
+  onActionClick?: (option: SearchableOption) => void;
+  // Enhanced action support
+  actions?: Array<{
+    icon: React.ReactNode;
+    onClick: (option: SearchableOption) => void;
+    title?: string;
+    disabled?: boolean;
+  }>;
+};
+```
+
+#### Action Type
+
+```tsx
+type Action = {
+  icon: React.ReactNode;
+  onClick: (option: SearchableOption) => void;
+  title?: string;
+  disabled?: boolean;
+};
+```
+
+### Other Components
+
+- Button
+- TextInput
+- Text
+- Tooltip
+- Select
+- ToggleSwitch
+- Spinner
+- Card
+- Tag
+- MultiSelect
+- Table
+- Modal
+- Toast
+- Form
 
 ## Usage
 
 ```tsx
-import { Button, Text, TextInput, Tooltip } from "@xiaofeng19920506/ui";
+import { Button, TextInput, Card } from '@xiaofeng19920506/ui';
 
-export default function Example() {
+function App() {
   return (
-    <div>
-      <Text as="h2" variant="title">
-        Hello
-      </Text>
-      <Button>Primary</Button>
-      <Tooltip content="Hi">
-        <Button variant="secondary">Hover</Button>
-      </Tooltip>
-      <TextInput label="Name" placeholder="Type..." />
-    </div>
+    <Card>
+      <TextInput placeholder="Enter text..." />
+      <Button>Click me</Button>
+    </Card>
   );
 }
 ```
 
-## Theming
+## Styling
 
-Edit `src/styles/tokens.css` to change colors (e.g., `--button-color`, `--button-color-secondary`).
+The library uses CSS Modules for styling. All styles are included in the package and will be automatically applied when you import the components.
 
-## Storybook
+## Development
 
-- Dev: `npm run -w @xiaofeng19920506/ui storybook`
-- Static build: `npm run -w @xiaofeng19920506/ui build-storybook`
+```bash
+# Install dependencies
+npm install
 
-## Build & Publish
+# Start development server
+npm run dev
 
-- Build: `npm run -w @xiaofeng19920506/ui build`
-- Publish to GitHub Packages: `npm publish --workspace @xiaofeng19920506/ui`
+# Build the library
+npm run build
+
+# Start Storybook
+npm run storybook
+```
