@@ -1,25 +1,29 @@
 import React, { useRef, useEffect } from "react";
 import styles from "./SearchableSelect.module.css";
 
-export type SearchableOption = {
+// Generic type for object options
+export type ObjectOption<T = any> = T & {
   label: string;
-  value: string;
+  value: string | number;
   actionIcon?: React.ReactNode;
-  onActionClick?: (option: SearchableOption) => void;
+  onActionClick?: (option: ObjectOption<T>) => void;
   // Enhanced action support
   actions?: Array<{
     icon: React.ReactNode;
-    onClick: (option: SearchableOption) => void;
+    onClick: (option: ObjectOption<T>) => void;
     title?: string;
     disabled?: boolean;
   }>;
 };
 
-export type SearchableSelectProps = {
+// Legacy type for backward compatibility
+export type SearchableOption = ObjectOption;
+
+export type SearchableSelectProps<T = any> = {
   label?: string;
-  options: SearchableOption[];
-  value?: string | null;
-  onChange: (value: string | null) => void;
+  options: ObjectOption<T>[];
+  value?: string | number | null;
+  onChange: (value: string | number | null, option?: ObjectOption<T>) => void;
   placeholder?: string;
   showActionIcons?: boolean;
   inputActionIcon?: React.ReactNode;
@@ -32,13 +36,19 @@ export type SearchableSelectProps = {
   showOptionActions?: boolean;
   defaultActions?: Array<{
     icon: React.ReactNode;
-    onClick: (option: SearchableOption) => void;
+    onClick: (option: ObjectOption<T>) => void;
     title?: string;
     disabled?: boolean;
   }>;
+  // Object option support
+  getOptionLabel?: (option: ObjectOption<T>) => string;
+  getOptionValue?: (option: ObjectOption<T>) => string | number;
+  searchableFields?: (keyof T)[];
+  displayField?: keyof T | "label";
+  valueField?: keyof T | "value";
 };
 
-export function SearchableSelect({
+export function SearchableSelect<T = any>({
   label,
   options = [],
   value,
@@ -52,7 +62,12 @@ export function SearchableSelect({
   showEmptyAction = false,
   showOptionActions = false,
   defaultActions = [],
-}: SearchableSelectProps) {
+  getOptionLabel,
+  getOptionValue,
+  searchableFields,
+  displayField = "label",
+  valueField = "value",
+}: SearchableSelectProps<T>) {
   const [query, setQuery] = React.useState("");
   const [isOpen, setIsOpen] = React.useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -62,40 +77,98 @@ export function SearchableSelect({
     setIsOpen(false);
   }, []);
 
+  // Helper function to get option label
+  const getLabel = (option: ObjectOption<T>): string => {
+    if (getOptionLabel) {
+      return getOptionLabel(option);
+    }
+
+    if (displayField === "label") {
+      return option.label || "";
+    }
+
+    const fieldValue = option[displayField];
+    return fieldValue ? String(fieldValue) : "";
+  };
+
+  // Helper function to get option value
+  const getValue = (option: ObjectOption<T>): string | number => {
+    if (getOptionValue) {
+      return getOptionValue(option);
+    }
+
+    if (valueField === "value") {
+      return option.value;
+    }
+
+    const fieldValue = option[valueField];
+    return fieldValue !== undefined && fieldValue !== null
+      ? String(fieldValue)
+      : option.value;
+  };
+
   // Find the selected option to display
   const selectedOption = options?.find(
-    (option) => option && option.value === value
+    (option) => option && getValue(option) === value
   );
-  const displayValue =
-    selectedOption &&
-    selectedOption.label &&
-    typeof selectedOption.label === "string"
-      ? selectedOption.label
-      : query;
+
+  const displayValue = selectedOption ? getLabel(selectedOption) : query;
 
   // Check if input is empty (no value selected and no query)
   const isInputEmpty = !displayValue && !query;
+
+  // Helper function to check if a field value matches the search query
+  const fieldMatchesQuery = (
+    option: ObjectOption<T>,
+    field: keyof T,
+    query: string
+  ): boolean => {
+    const fieldValue = option[field];
+    if (fieldValue === undefined || fieldValue === null) return false;
+    return String(fieldValue).toLowerCase().includes(query.toLowerCase());
+  };
 
   const filtered = React.useMemo(() => {
     try {
       const q = query.toLowerCase();
       return options.filter((o) => {
         try {
-          // Ensure o exists, has a label property, and label is a string
-          if (!o || !o.label || typeof o.label !== "string") {
-            return false;
+          // Ensure o exists
+          if (!o) return false;
+
+          // If searchableFields is specified, search only those fields
+          if (searchableFields && searchableFields.length > 0) {
+            return searchableFields.some((field) =>
+              fieldMatchesQuery(o, field, q)
+            );
           }
-          return o.label.toLowerCase().includes(q);
+
+          // Default search behavior - search in label and value
+          const label = getLabel(o);
+          const optionValue = getValue(o);
+
+          return (
+            label.toLowerCase().includes(q) ||
+            String(optionValue).toLowerCase().includes(q)
+          );
         } catch (error) {
-          console.warn('Error filtering option:', o, error);
+          console.warn("Error filtering option:", o, error);
           return false;
         }
       });
     } catch (error) {
-      console.error('Error in SearchableSelect filter:', error);
+      console.error("Error in SearchableSelect filter:", error);
       return [];
     }
-  }, [query, options]);
+  }, [
+    query,
+    options,
+    searchableFields,
+    getOptionLabel,
+    getOptionValue,
+    displayField,
+    valueField,
+  ]);
 
   // Handle click outside to close dropdown
   useEffect(() => {
@@ -131,22 +204,23 @@ export function SearchableSelect({
     setIsOpen(true);
 
     // Clear selection if user is typing
-    if (newValue !== selectedOption?.label) {
+    if (selectedOption && newValue !== getLabel(selectedOption)) {
       onChange(null);
     }
   };
 
   // Handle option selection
-  const handleOptionClick = (option: SearchableOption) => {
-    if (option && option.value) {
-      onChange(option.value);
-      setQuery(option.label || "");
+  const handleOptionClick = (option: ObjectOption<T>) => {
+    if (option) {
+      const optionValue = getValue(option);
+      onChange(optionValue, option);
+      setQuery(getLabel(option));
       setIsOpen(false);
     }
   };
 
   // Handle legacy action icon click
-  const handleActionClick = (e: React.MouseEvent, option: SearchableOption) => {
+  const handleActionClick = (e: React.MouseEvent, option: ObjectOption<T>) => {
     e.stopPropagation(); // Prevent option selection
     if (option.onActionClick) {
       option.onActionClick(option);
@@ -156,8 +230,8 @@ export function SearchableSelect({
   // Handle enhanced action click
   const handleEnhancedActionClick = (
     e: React.MouseEvent,
-    option: SearchableOption,
-    action: { onClick: (option: SearchableOption) => void; disabled?: boolean }
+    option: ObjectOption<T>,
+    action: { onClick: (option: ObjectOption<T>) => void; disabled?: boolean }
   ) => {
     e.stopPropagation(); // Prevent option selection
     if (!action.disabled && action.onClick) {
@@ -196,10 +270,10 @@ export function SearchableSelect({
   };
 
   // Get actions for an option (combine option-specific and default actions)
-  const getOptionActions = (option: SearchableOption) => {
+  const getOptionActions = (option: ObjectOption<T>) => {
     const optionActions = option.actions || [];
     const allActions = [...optionActions, ...defaultActions];
-    return allActions.filter(action => action && action.icon);
+    return allActions.filter((action) => action && action.icon);
   };
 
   return (
@@ -241,16 +315,17 @@ export function SearchableSelect({
             {filtered.map((opt) => {
               const actions = getOptionActions(opt);
               const hasLegacyAction = showActionIcons && opt.actionIcon;
-              const hasEnhancedActions = showOptionActions && actions.length > 0;
-              
+              const hasEnhancedActions =
+                showOptionActions && actions.length > 0;
+
               return (
                 <div
-                  key={opt.value}
+                  key={getValue(opt)}
                   className={styles.item}
                   onClick={() => handleOptionClick(opt)}
                   role="button"
                 >
-                  <span className={styles.itemLabel}>{opt.label}</span>
+                  <span className={styles.itemLabel}>{getLabel(opt)}</span>
                   <div className={styles.actionContainer}>
                     {/* Legacy action icon support */}
                     {hasLegacyAction && (
@@ -263,18 +338,21 @@ export function SearchableSelect({
                       </div>
                     )}
                     {/* Enhanced actions support */}
-                    {hasEnhancedActions && actions.map((action, index) => (
-                      <div
-                        key={index}
-                        className={`${styles.actionIcon} ${
-                          action.disabled ? styles.actionIconDisabled : ''
-                        }`}
-                        onClick={(e) => handleEnhancedActionClick(e, opt, action)}
-                        title={action.title}
-                      >
-                        {action.icon}
-                      </div>
-                    ))}
+                    {hasEnhancedActions &&
+                      actions.map((action, index) => (
+                        <div
+                          key={index}
+                          className={`${styles.actionIcon} ${
+                            action.disabled ? styles.actionIconDisabled : ""
+                          }`}
+                          onClick={(e) =>
+                            handleEnhancedActionClick(e, opt, action)
+                          }
+                          title={action.title}
+                        >
+                          {action.icon}
+                        </div>
+                      ))}
                   </div>
                 </div>
               );

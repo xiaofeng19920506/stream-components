@@ -40,11 +40,11 @@ export type {
 export { Table } from "./primitives/Table/Table.js";
 export type { TableProps, TableColumn } from "./primitives/Table/Table.js";
 
-export { SearchableSelect } from "./primitives/SearchableSelect/SearchableSelect.js";
+export { SearchableSelect } from "./primitives/SearchableSelect/index.js";
 export type {
   SearchableSelectProps,
   SearchableOption,
-} from "./primitives/SearchableSelect/SearchableSelect.js";
+} from "./primitives/SearchableSelect/index.js";
 
 export { Modal } from "./primitives/Modal/Modal.js";
 export type { ModalProps } from "./primitives/Modal/Modal.js";
