@@ -21,7 +21,7 @@ export type SearchableSelectProps = {
 
 export function SearchableSelect({
   label,
-  options,
+  options = [],
   value,
   onChange,
   placeholder = "Search...",
@@ -39,7 +39,7 @@ export function SearchableSelect({
   }, []);
 
   // Find the selected option to display
-  const selectedOption = options.find(
+  const selectedOption = options?.find(
     (option) => option && option.value === value
   );
   const displayValue =
