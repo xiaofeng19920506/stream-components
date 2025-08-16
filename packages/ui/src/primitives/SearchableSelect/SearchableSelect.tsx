@@ -1,7 +1,12 @@
 import React, { useRef, useEffect } from "react";
 import styles from "./SearchableSelect.module.css";
 
-export type SearchableOption = { label: string; value: string };
+export type SearchableOption = {
+  label: string;
+  value: string;
+  actionIcon?: React.ReactNode;
+  onActionClick?: (option: SearchableOption) => void;
+};
 
 export type SearchableSelectProps = {
   label?: string;
@@ -9,6 +14,9 @@ export type SearchableSelectProps = {
   value?: string | null;
   onChange: (value: string | null) => void;
   placeholder?: string;
+  showActionIcons?: boolean;
+  inputActionIcon?: React.ReactNode;
+  onInputActionClick?: () => void;
 };
 
 export function SearchableSelect({
@@ -17,6 +25,9 @@ export function SearchableSelect({
   value,
   onChange,
   placeholder = "Search...",
+  showActionIcons = false,
+  inputActionIcon,
+  onInputActionClick,
 }: SearchableSelectProps) {
   const [query, setQuery] = React.useState("");
   const [isOpen, setIsOpen] = React.useState(false);
@@ -28,12 +39,23 @@ export function SearchableSelect({
   }, []);
 
   // Find the selected option to display
-  const selectedOption = options.find((option) => option.value === value);
-  const displayValue = selectedOption ? selectedOption.label : query;
+  const selectedOption = options.find(
+    (option) => option && option.value === value
+  );
+  const displayValue =
+    selectedOption && selectedOption.label ? selectedOption.label : query;
 
   const filtered = React.useMemo(() => {
     const q = query.toLowerCase();
-    return options.filter((o) => o.label.toLowerCase().includes(q));
+    return options.filter((o) => {
+      // Ensure o.label exists and is a string before calling toLowerCase
+      return (
+        o &&
+        o.label &&
+        typeof o.label === "string" &&
+        o.label.toLowerCase().includes(q)
+      );
+    });
   }, [query, options]);
 
   // Handle click outside to close dropdown
@@ -77,9 +99,27 @@ export function SearchableSelect({
 
   // Handle option selection
   const handleOptionClick = (option: SearchableOption) => {
-    onChange(option.value);
-    setQuery(option.label);
-    setIsOpen(false);
+    if (option && option.value) {
+      onChange(option.value);
+      setQuery(option.label || "");
+      setIsOpen(false);
+    }
+  };
+
+  // Handle action icon click
+  const handleActionClick = (e: React.MouseEvent, option: SearchableOption) => {
+    e.stopPropagation(); // Prevent option selection
+    if (option.onActionClick) {
+      option.onActionClick(option);
+    }
+  };
+
+  // Handle input action icon click
+  const handleInputActionClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent input focus
+    if (onInputActionClick) {
+      onInputActionClick();
+    }
   };
 
   // Handle focus
@@ -108,6 +148,17 @@ export function SearchableSelect({
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
+        {/* Show + symbol when input is empty */}
+        {!displayValue && !isOpen && !inputActionIcon && <div className={styles.addIcon}>+</div>}
+        {/* Show custom input action icon */}
+        {inputActionIcon && (
+          <div 
+            className={styles.inputActionIcon}
+            onClick={handleInputActionClick}
+          >
+            {inputActionIcon}
+          </div>
+        )}
         {isOpen && (
           <div className={styles.list}>
             {filtered.map((opt) => (
@@ -117,7 +168,15 @@ export function SearchableSelect({
                 onClick={() => handleOptionClick(opt)}
                 role="button"
               >
-                {opt.label}
+                <span className={styles.itemLabel}>{opt.label}</span>
+                {showActionIcons && opt.actionIcon && (
+                  <div
+                    className={styles.actionIcon}
+                    onClick={(e) => handleActionClick(e, opt)}
+                  >
+                    {opt.actionIcon}
+                  </div>
+                )}
               </div>
             ))}
             {filtered.length === 0 && (
