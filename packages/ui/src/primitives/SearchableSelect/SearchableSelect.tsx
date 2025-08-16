@@ -43,19 +43,31 @@ export function SearchableSelect({
     (option) => option && option.value === value
   );
   const displayValue =
-    selectedOption && selectedOption.label && typeof selectedOption.label === "string" 
-      ? selectedOption.label 
+    selectedOption &&
+    selectedOption.label &&
+    typeof selectedOption.label === "string"
+      ? selectedOption.label
       : query;
 
   const filtered = React.useMemo(() => {
-    const q = query.toLowerCase();
-    return options.filter((o) => {
-      // Ensure o exists, has a label property, and label is a string
-      if (!o || !o.label || typeof o.label !== "string") {
-        return false;
-      }
-      return o.label.toLowerCase().includes(q);
-    });
+    try {
+      const q = query.toLowerCase();
+      return options.filter((o) => {
+        try {
+          // Ensure o exists, has a label property, and label is a string
+          if (!o || !o.label || typeof o.label !== "string") {
+            return false;
+          }
+          return o.label.toLowerCase().includes(q);
+        } catch (error) {
+          console.warn('Error filtering option:', o, error);
+          return false;
+        }
+      });
+    } catch (error) {
+      console.error('Error in SearchableSelect filter:', error);
+      return [];
+    }
   }, [query, options]);
 
   // Handle click outside to close dropdown
