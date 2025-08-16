@@ -149,10 +149,12 @@ export function SearchableSelect({
           onBlur={handleBlur}
         />
         {/* Show + symbol when input is empty */}
-        {!displayValue && !isOpen && !inputActionIcon && <div className={styles.addIcon}>+</div>}
+        {!displayValue && !isOpen && !inputActionIcon && (
+          <div className={styles.addIcon}>+</div>
+        )}
         {/* Show custom input action icon */}
         {inputActionIcon && (
-          <div 
+          <div
             className={styles.inputActionIcon}
             onClick={handleInputActionClick}
           >
