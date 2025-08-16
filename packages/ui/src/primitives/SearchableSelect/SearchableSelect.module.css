@@ -91,7 +91,7 @@
 }
 
 .actionIcon {
-  padding: 2px;
+  padding: 2px 6px;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.2s ease;
@@ -99,11 +99,16 @@
   align-items: center;
   justify-content: center;
   min-width: 20px;
-  height: 20px;
+  min-height: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #6b7280;
+  border: 1px solid transparent;
 }
 
 .actionIcon:hover {
   background-color: #f3f4f6;
+  border-color: #d1d5db;
 }
 
 .actionIconDisabled {
@@ -113,6 +118,7 @@
 
 .actionIconDisabled:hover {
   background-color: transparent;
+  border-color: transparent;
 }
 
 .inputActionIcon {

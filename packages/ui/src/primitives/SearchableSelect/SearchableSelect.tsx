@@ -9,10 +9,13 @@ export type ObjectOption<T = any> = T & {
   onActionClick?: (option: ObjectOption<T>) => void;
   // Enhanced action support
   actions?: Array<{
-    icon: React.ReactNode;
+    icon?: React.ReactNode;
+    text?: string;
     onClick: (option: ObjectOption<T>) => void;
     title?: string;
     disabled?: boolean;
+    className?: string;
+    style?: React.CSSProperties;
   }>;
 };
 
@@ -28,17 +31,24 @@ export type SearchableSelectProps<T = any> = {
   showActionIcons?: boolean;
   inputActionIcon?: React.ReactNode;
   onInputActionClick?: () => void;
+  inputActionClassName?: string;
+  inputActionStyle?: React.CSSProperties;
   // New props for empty state action button
   emptyActionIcon?: React.ReactNode;
   onEmptyActionClick?: () => void;
   showEmptyAction?: boolean;
+  emptyActionClassName?: string;
+  emptyActionStyle?: React.CSSProperties;
   // Enhanced action support
   showOptionActions?: boolean;
   defaultActions?: Array<{
-    icon: React.ReactNode;
+    icon?: React.ReactNode;
+    text?: string;
     onClick: (option: ObjectOption<T>) => void;
     title?: string;
     disabled?: boolean;
+    className?: string;
+    style?: React.CSSProperties;
   }>;
   // Object option support
   getOptionLabel?: (option: ObjectOption<T>) => string;
@@ -57,9 +67,13 @@ export function SearchableSelect<T = any>({
   showActionIcons = false,
   inputActionIcon,
   onInputActionClick,
+  inputActionClassName,
+  inputActionStyle,
   emptyActionIcon,
   onEmptyActionClick,
   showEmptyAction = false,
+  emptyActionClassName,
+  emptyActionStyle,
   showOptionActions = false,
   defaultActions = [],
   getOptionLabel,
@@ -273,7 +287,7 @@ export function SearchableSelect<T = any>({
   const getOptionActions = (option: ObjectOption<T>) => {
     const optionActions = option.actions || [];
     const allActions = [...optionActions, ...defaultActions];
-    return allActions.filter((action) => action && action.icon);
+    return allActions.filter((action) => action && (action.icon || action.text));
   };
 
   return (
@@ -291,7 +305,8 @@ export function SearchableSelect<T = any>({
         {/* Show empty action icon when input is empty and not open */}
         {isInputEmpty && !isOpen && showEmptyAction && emptyActionIcon && (
           <div
-            className={styles.emptyActionIcon}
+            className={`${styles.emptyActionIcon} ${emptyActionClassName || ""}`}
+            style={emptyActionStyle}
             onClick={handleEmptyActionClick}
           >
             {emptyActionIcon}
@@ -304,7 +319,8 @@ export function SearchableSelect<T = any>({
         {/* Show custom input action icon when there's a value or query */}
         {(!isInputEmpty || isOpen) && inputActionIcon && (
           <div
-            className={styles.inputActionIcon}
+            className={`${styles.inputActionIcon} ${inputActionClassName || ""}`}
+            style={inputActionStyle}
             onClick={handleInputActionClick}
           >
             {inputActionIcon}
@@ -344,13 +360,14 @@ export function SearchableSelect<T = any>({
                           key={index}
                           className={`${styles.actionIcon} ${
                             action.disabled ? styles.actionIconDisabled : ""
-                          }`}
+                          } ${action.className || ""}`}
+                          style={action.style}
                           onClick={(e) =>
                             handleEnhancedActionClick(e, opt, action)
                           }
                           title={action.title}
                         >
-                          {action.icon}
+                          {action.icon || action.text}
                         </div>
                       ))}
                   </div>
