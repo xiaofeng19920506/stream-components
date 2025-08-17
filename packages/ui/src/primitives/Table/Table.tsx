@@ -5,6 +5,9 @@ export type TableColumn<T extends object> = {
   header: string;
   accessor: keyof T | ((row: T) => React.ReactNode);
   sortable?: boolean;
+  width?: string;
+  minWidth?: string;
+  maxWidth?: string;
 };
 
 export type TableProps<T extends object> = {
@@ -81,6 +84,11 @@ export function Table<T extends object>({
                 key={i}
                 onClick={() => toggleSort(i)}
                 className={c.sortable ? styles.sortable : undefined}
+                style={{
+                  width: c.width,
+                  minWidth: c.minWidth,
+                  maxWidth: c.maxWidth,
+                }}
               >
                 {c.header}
                 {sort?.index === i && (
@@ -101,7 +109,14 @@ export function Table<T extends object>({
               style={onRowClick ? { cursor: "pointer" } : undefined}
             >
               {columns.map((c, ci) => (
-                <td key={ci}>
+                <td
+                  key={ci}
+                  style={{
+                    width: c.width,
+                    minWidth: c.minWidth,
+                    maxWidth: c.maxWidth,
+                  }}
+                >
                   {typeof c.accessor === "function"
                     ? c.accessor(row)
                     : (row[c.accessor] as unknown as React.ReactNode)}

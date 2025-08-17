@@ -39,6 +39,11 @@ export type SearchableSelectProps<T = any> = {
   showEmptyAction?: boolean;
   emptyActionClassName?: string;
   emptyActionStyle?: React.CSSProperties;
+  // Enhanced action button props
+  showActionOnFocus?: boolean;
+  actionButtonText?: string;
+  actionButtonVariant?: "icon" | "text" | "button";
+  actionButtonSize?: "small" | "medium" | "large";
   // Enhanced action support
   showOptionActions?: boolean;
   defaultActions?: Array<{
@@ -74,6 +79,10 @@ export function SearchableSelect<T = any>({
   showEmptyAction = false,
   emptyActionClassName,
   emptyActionStyle,
+  showActionOnFocus = false,
+  actionButtonText,
+  actionButtonVariant = "icon",
+  actionButtonSize = "medium",
   showOptionActions = false,
   defaultActions = [],
   getOptionLabel,
@@ -126,10 +135,78 @@ export function SearchableSelect<T = any>({
     (option) => option && getValue(option) === value
   );
 
-  const displayValue = selectedOption ? getLabel(selectedOption) : query;
+  // Use query when user is typing, otherwise show selected option label
+  const displayValue =
+    query || (selectedOption ? getLabel(selectedOption) : "");
 
   // Check if input is empty (no value selected and no query)
   const isInputEmpty = !displayValue && !query;
+
+  // Determine if action button should be shown
+  const shouldShowActionButton =
+    (showEmptyAction && emptyActionIcon) || (showActionOnFocus && isOpen);
+
+  // Helper function to get action button styles
+  const getActionButtonStyles = () => {
+    const baseStyles: React.CSSProperties = {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      cursor: "pointer",
+      border: "none",
+      background: "transparent",
+      padding: "0",
+      margin: "0",
+      fontSize: "14px",
+      fontFamily: "inherit",
+    };
+
+    switch (actionButtonVariant) {
+      case "text":
+        return {
+          ...baseStyles,
+          color: "#007bff",
+          fontWeight: "500",
+          padding: "4px 8px",
+          borderRadius: "4px",
+          transition: "background-color 0.2s",
+        };
+      case "button":
+        return {
+          ...baseStyles,
+          backgroundColor: "#007bff",
+          color: "white",
+          padding:
+            actionButtonSize === "small"
+              ? "4px 8px"
+              : actionButtonSize === "large"
+              ? "8px 16px"
+              : "6px 12px",
+          borderRadius: "4px",
+          fontSize:
+            actionButtonSize === "small"
+              ? "12px"
+              : actionButtonSize === "large"
+              ? "16px"
+              : "14px",
+          fontWeight: "500",
+          transition: "background-color 0.2s",
+        };
+      case "icon":
+      default:
+        return {
+          ...baseStyles,
+          color: "#007bff",
+          fontSize:
+            actionButtonSize === "small"
+              ? "16px"
+              : actionButtonSize === "large"
+              ? "24px"
+              : "20px",
+          padding: "4px",
+        };
+    }
+  };
 
   // Helper function to check if a field value matches the search query
   const fieldMatchesQuery = (
@@ -217,7 +294,7 @@ export function SearchableSelect<T = any>({
     setQuery(newValue);
     setIsOpen(true);
 
-    // Clear selection if user is typing
+    // Clear selection if user is typing and the value doesn't match the selected option
     if (selectedOption && newValue !== getLabel(selectedOption)) {
       onChange(null);
     }
@@ -228,7 +305,7 @@ export function SearchableSelect<T = any>({
     if (option) {
       const optionValue = getValue(option);
       onChange(optionValue, option);
-      setQuery(getLabel(option));
+      setQuery(""); // Clear query when option is selected
       setIsOpen(false);
     }
   };
@@ -287,7 +364,9 @@ export function SearchableSelect<T = any>({
   const getOptionActions = (option: ObjectOption<T>) => {
     const optionActions = option.actions || [];
     const allActions = [...optionActions, ...defaultActions];
-    return allActions.filter((action) => action && (action.icon || action.text));
+    return allActions.filter(
+      (action) => action && (action.icon || action.text)
+    );
   };
 
   return (
@@ -302,29 +381,16 @@ export function SearchableSelect<T = any>({
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
-        {/* Show empty action icon when input is empty and not open */}
-        {isInputEmpty && !isOpen && showEmptyAction && emptyActionIcon && (
-          <div
-            className={`${styles.emptyActionIcon} ${emptyActionClassName || ""}`}
-            style={emptyActionStyle}
+        {/* Show action button when conditions are met */}
+        {shouldShowActionButton && (
+          <button
+            className={styles.actionButton}
+            style={getActionButtonStyles()}
             onClick={handleEmptyActionClick}
+            type="button"
           >
-            {emptyActionIcon}
-          </div>
-        )}
-        {/* Show default + symbol when input is empty and no custom empty action */}
-        {isInputEmpty && !isOpen && !showEmptyAction && !inputActionIcon && (
-          <div className={styles.addIcon}>+</div>
-        )}
-        {/* Show custom input action icon when there's a value or query */}
-        {(!isInputEmpty || isOpen) && inputActionIcon && (
-          <div
-            className={`${styles.inputActionIcon} ${inputActionClassName || ""}`}
-            style={inputActionStyle}
-            onClick={handleInputActionClick}
-          >
-            {inputActionIcon}
-          </div>
+            {emptyActionIcon || actionButtonText || "+"}
+          </button>
         )}
         {isOpen && (
           <div className={styles.list}>
