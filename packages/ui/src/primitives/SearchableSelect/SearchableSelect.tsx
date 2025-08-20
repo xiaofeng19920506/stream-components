@@ -25,8 +25,11 @@ export type SearchableOption = ObjectOption;
 export type SearchableSelectProps<T = any> = {
   label?: string;
   options: ObjectOption<T>[];
-  value?: string | number | null;
-  onChange: (value: string | number | null, option?: ObjectOption<T>) => void;
+  value?: string | number | null | (string | number)[]; // Support both single and multiple values
+  onChange: (
+    value: string | number | null | (string | number)[],
+    option?: ObjectOption<T> | ObjectOption<T>[]
+  ) => void;
   placeholder?: string;
   showActionIcons?: boolean;
   inputActionIcon?: React.ReactNode;
@@ -61,6 +64,12 @@ export type SearchableSelectProps<T = any> = {
   searchableFields?: (keyof T)[];
   displayField?: keyof T | "label";
   valueField?: keyof T | "value";
+  // Multiselect support
+  multiselect?: boolean;
+  maxSelections?: number;
+  showSelectedCount?: boolean;
+  selectedItemStyle?: React.CSSProperties;
+  removeIcon?: React.ReactNode;
 };
 
 export function SearchableSelect<T = any>({
@@ -90,6 +99,11 @@ export function SearchableSelect<T = any>({
   searchableFields,
   displayField = "label",
   valueField = "value",
+  multiselect,
+  maxSelections,
+  showSelectedCount,
+  selectedItemStyle,
+  removeIcon,
 }: SearchableSelectProps<T>) {
   const [query, setQuery] = React.useState("");
   const [isOpen, setIsOpen] = React.useState(false);
@@ -130,17 +144,29 @@ export function SearchableSelect<T = any>({
       : option.value;
   };
 
-  // Find the selected option to display
-  const selectedOption = options?.find(
-    (option) => option && getValue(option) === value
+  // Handle multiselect vs single select
+  const isMultiselect = multiselect === true;
+  const selectedValues = isMultiselect
+    ? Array.isArray(value)
+      ? value
+      : []
+    : value
+    ? [value]
+    : [];
+
+  // Find the selected options to display
+  const selectedOptions = options?.filter(
+    (option) => option && selectedValues.includes(getValue(option))
   );
 
-  // Use query when user is typing, otherwise show selected option label
-  const displayValue =
-    query || (selectedOption ? getLabel(selectedOption) : "");
+  // For multiselect, show selected items as tags and query
+  // For single select, use query when user is typing, otherwise show selected option label
+  const displayValue = isMultiselect
+    ? query
+    : query || (selectedOptions[0] ? getLabel(selectedOptions[0]) : "");
 
   // Check if input is empty (no value selected and no query)
-  const isInputEmpty = !displayValue && !query;
+  const isInputEmpty = !displayValue && !query && selectedValues.length === 0;
 
   // Determine if action button should be shown
   const shouldShowActionButton =
@@ -227,6 +253,11 @@ export function SearchableSelect<T = any>({
           // Ensure o exists
           if (!o) return false;
 
+          // In multiselect mode, exclude already selected options
+          if (isMultiselect && selectedValues.includes(getValue(o))) {
+            return false;
+          }
+
           // If searchableFields is specified, search only those fields
           if (searchableFields && searchableFields.length > 0) {
             return searchableFields.some((field) =>
@@ -259,6 +290,8 @@ export function SearchableSelect<T = any>({
     getOptionValue,
     displayField,
     valueField,
+    isMultiselect,
+    selectedValues,
   ]);
 
   // Handle click outside to close dropdown
@@ -294,8 +327,12 @@ export function SearchableSelect<T = any>({
     setQuery(newValue);
     setIsOpen(true);
 
-    // Clear selection if user is typing and the value doesn't match the selected option
-    if (selectedOption && newValue !== getLabel(selectedOption)) {
+    // For single select, clear selection if user is typing and the value doesn't match the selected option
+    if (
+      !isMultiselect &&
+      selectedOptions[0] &&
+      newValue !== getLabel(selectedOptions[0])
+    ) {
       onChange(null);
     }
   };
@@ -304,9 +341,39 @@ export function SearchableSelect<T = any>({
   const handleOptionClick = (option: ObjectOption<T>) => {
     if (option) {
       const optionValue = getValue(option);
-      onChange(optionValue, option);
-      setQuery(""); // Clear query when option is selected
-      setIsOpen(false);
+
+      if (isMultiselect) {
+        // For multiselect, add to existing selections
+        const newSelectedValues = [...selectedValues, optionValue];
+
+        // Check max selections limit
+        if (maxSelections && newSelectedValues.length > maxSelections) {
+          return; // Don't add if max reached
+        }
+
+        const newSelectedOptions = [...selectedOptions, option];
+        onChange(newSelectedValues, newSelectedOptions);
+        setQuery(""); // Clear query when option is selected
+        // Keep dropdown open for multiselect
+      } else {
+        // For single select, replace selection
+        onChange(optionValue, option);
+        setQuery(""); // Clear query when option is selected
+        setIsOpen(false);
+      }
+    }
+  };
+
+  // Handle removing a selected item in multiselect mode
+  const handleRemoveSelected = (valueToRemove: string | number) => {
+    if (isMultiselect) {
+      const newSelectedValues = selectedValues.filter(
+        (v) => v !== valueToRemove
+      );
+      const newSelectedOptions = selectedOptions.filter(
+        (opt) => getValue(opt) !== valueToRemove
+      );
+      onChange(newSelectedValues, newSelectedOptions);
     }
   };
 
@@ -349,7 +416,7 @@ export function SearchableSelect<T = any>({
   // Handle focus
   const handleFocus = () => {
     setIsOpen(true);
-    if (!selectedOption) {
+    if (!selectedOptions[0]) {
       setQuery("");
     }
   };
@@ -373,9 +440,40 @@ export function SearchableSelect<T = any>({
     <div className={styles.root} ref={containerRef}>
       {label && <div className={styles.label}>{label}</div>}
       <div className={styles.inputWrapper}>
+        {isMultiselect && selectedOptions.length > 0 && (
+          <div className={styles.selectedItemsContainer}>
+            {selectedOptions.map((option) => (
+              <span
+                key={getValue(option)}
+                className={styles.selectedItem}
+                style={selectedItemStyle}
+              >
+                {getLabel(option)}
+                <button
+                  type="button"
+                  className={styles.removeButton}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleRemoveSelected(getValue(option));
+                  }}
+                  title="Remove"
+                >
+                  {removeIcon || "×"}
+                </button>
+              </span>
+            ))}
+            {showSelectedCount && (
+              <span className={styles.selectedCount}>
+                {selectedOptions.length} selected
+              </span>
+            )}
+          </div>
+        )}
         <input
           className={styles.input}
-          placeholder={placeholder}
+          placeholder={
+            isMultiselect && selectedOptions.length > 0 ? "" : placeholder
+          }
           value={displayValue}
           onChange={handleInputChange}
           onFocus={handleFocus}

@@ -103,3 +103,69 @@
 .actionIconDisabled:hover {
   background-color: transparent;
 }
+
+/* Multiselect styles */
+.selectedItemsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px 8px;
+  min-height: 32px;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  background-color: #f8f9fa;
+}
+
+.selectedItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background-color: #e3f2fd;
+  color: #1976d2;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid #bbdefb;
+}
+
+.removeButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #1976d2;
+  padding: 0;
+  margin-left: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.removeButton:hover {
+  background-color: #bbdefb;
+}
+
+.selectedCount {
+  font-size: 12px;
+  color: #666;
+  margin-left: auto;
+  font-style: italic;
+}
+
+/* Adjust input wrapper for multiselect */
+.inputWrapper:has(.selectedItemsContainer) {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.inputWrapper:has(.selectedItemsContainer) .input {
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+}
