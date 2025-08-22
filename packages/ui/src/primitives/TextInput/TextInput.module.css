@@ -21,6 +21,14 @@
   border-color: var(--focus-ring);
   box-shadow: 0 0 0 3px rgba(77, 187, 236, 0.3);
 }
+
+/* Ensure consistent placeholder styling */
+.input::placeholder {
+  color: #9ca3af;
+  opacity: 1;
+  font-size: 14px;
+  font-family: inherit;
+}
 .error {
   border-color: var(--alert-color);
 }
