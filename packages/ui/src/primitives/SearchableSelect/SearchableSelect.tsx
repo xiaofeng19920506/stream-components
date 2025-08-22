@@ -352,7 +352,7 @@ export function SearchableSelect<T = any>({
         }
 
         const newSelectedOptions = [...selectedOptions, option];
-        onChange(newSelectedValues, newSelectedOptions);
+        onChange(newSelectedValues as (string | number)[], newSelectedOptions);
         setQuery(""); // Clear query when option is selected
         // Keep dropdown open for multiselect
       } else {
@@ -373,7 +373,7 @@ export function SearchableSelect<T = any>({
       const newSelectedOptions = selectedOptions.filter(
         (opt) => getValue(opt) !== valueToRemove
       );
-      onChange(newSelectedValues, newSelectedOptions);
+      onChange(newSelectedValues as (string | number)[], newSelectedOptions);
     }
   };
 
