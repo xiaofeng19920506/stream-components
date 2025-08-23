@@ -1,5 +1,10 @@
-.root { display: grid; gap: 6px; }
-.label { font-weight: 600; }
+.root {
+  display: grid;
+  gap: 6px;
+}
+.label {
+  font-weight: 600;
+}
 .select {
   width: 100%;
   height: 40px;
@@ -11,9 +16,18 @@
   background-color: white;
   box-sizing: border-box;
   font-family: inherit;
+  /* Reset native select styling */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  /* Ensure consistent line height */
+  line-height: 1.2;
 }
-.select:focus { border-color: var(--focus-ring); box-shadow: 0 0 0 3px rgba(77, 187, 236, 0.3); }
-.helper { color: var(--gray-font-color); font-size: 12px; }
-
-
-
+.select:focus {
+  border-color: var(--focus-ring);
+  box-shadow: 0 0 0 3px rgba(77, 187, 236, 0.3);
+}
+.helper {
+  color: var(--gray-font-color);
+  font-size: 12px;
+}
