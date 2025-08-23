@@ -6,22 +6,26 @@
   font-weight: 600;
 }
 .select {
-  width: 100%;
-  height: 40px;
-  padding: 8px 12px;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  outline: none;
-  font-size: 14px;
-  background-color: white;
-  box-sizing: border-box;
-  font-family: inherit;
+  width: 100% !important;
+  height: 40px !important;
+  padding: 8px 12px !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 4px !important;
+  outline: none !important;
+  font-size: 14px !important;
+  background-color: white !important;
+  box-sizing: border-box !important;
+  font-family: inherit !important;
   /* Reset native select styling */
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
   /* Ensure consistent line height */
-  line-height: 1.2;
+  line-height: 1.2 !important;
+  /* Remove any default margins/padding */
+  margin: 0 !important;
+  /* Force consistent vertical alignment */
+  vertical-align: middle !important;
 }
 .select:focus {
   border-color: var(--focus-ring);
