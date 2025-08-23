@@ -1,11 +1,16 @@
 .root { display: grid; gap: 6px; }
 .label { font-weight: 600; }
 .select {
-  padding: 8px 10px;
+  width: 100%;
+  height: 40px;
+  padding: 8px 12px;
   border: 1px solid var(--border-color);
-  border-radius: 6px;
+  border-radius: 4px;
   outline: none;
-  background: #fff;
+  font-size: 14px;
+  background-color: white;
+  box-sizing: border-box;
+  font-family: inherit;
 }
 .select:focus { border-color: var(--focus-ring); box-shadow: 0 0 0 3px rgba(77, 187, 236, 0.3); }
 .helper { color: var(--gray-font-color); font-size: 12px; }
