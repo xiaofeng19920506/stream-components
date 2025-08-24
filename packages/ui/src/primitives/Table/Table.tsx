@@ -1,5 +1,5 @@
-import React from "react";
-import styles from "./Table.module.css";
+import React from 'react';
+import styles from './Table.module.css';
 
 export type TableColumn<T extends object> = {
   header: string;
@@ -13,7 +13,7 @@ export type TableColumn<T extends object> = {
 export type TableProps<T extends object> = {
   columns: TableColumn<T>[];
   data: T[];
-  initialSortBy?: { index: number; direction: "asc" | "desc" };
+  initialSortBy?: { index: number; direction: 'asc' | 'desc' };
   pageSizeOptions?: number[];
   initialPageSize?: number;
   onRowClick?: (row: T, rowIndex: number) => void;
@@ -31,7 +31,7 @@ export function Table<T extends object>({
 }: TableProps<T>) {
   const [sort, setSort] = React.useState<{
     index: number;
-    direction: "asc" | "desc";
+    direction: 'asc' | 'desc';
   } | null>(initialSortBy || null);
   const [pageIndex, setPageIndex] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(initialPageSize);
@@ -39,7 +39,7 @@ export function Table<T extends object>({
   const sortedData = React.useMemo(() => {
     if (!sort) return data;
     const col = columns[sort.index];
-    if (!col || typeof col.accessor === "function") return data;
+    if (!col || typeof col.accessor === 'function') return data;
     const key = col.accessor as keyof T;
     const copy = [...data];
     copy.sort((a, b) => {
@@ -49,7 +49,7 @@ export function Table<T extends object>({
       if (av == null) return 1;
       if (bv == null) return -1;
       const cmp = av > bv ? 1 : -1;
-      return sort.direction === "asc" ? cmp : -1 * cmp;
+      return sort.direction === 'asc' ? cmp : -1 * cmp;
     });
     return copy;
   }, [data, sort, columns]);
@@ -62,8 +62,8 @@ export function Table<T extends object>({
     if (!columns[i].sortable) return;
     setPageIndex(0);
     setSort((prev) => {
-      if (!prev || prev.index !== i) return { index: i, direction: "asc" };
-      if (prev.direction === "asc") return { index: i, direction: "desc" };
+      if (!prev || prev.index !== i) return { index: i, direction: 'asc' };
+      if (prev.direction === 'asc') return { index: i, direction: 'desc' };
       return null;
     });
   };
@@ -92,9 +92,7 @@ export function Table<T extends object>({
               >
                 {c.header}
                 {sort?.index === i && (
-                  <span className={styles.sortIcon}>
-                    {sort.direction === "asc" ? "▲" : "▼"}
-                  </span>
+                  <span className={styles.sortIcon}>{sort.direction === 'asc' ? '▲' : '▼'}</span>
                 )}
               </th>
             ))}
@@ -106,7 +104,7 @@ export function Table<T extends object>({
               key={ri}
               onClick={() => handleRowClick(row, pageStart + ri)}
               className={onRowClick ? styles.clickableRow : undefined}
-              style={onRowClick ? { cursor: "pointer" } : undefined}
+              style={onRowClick ? { cursor: 'pointer' } : undefined}
             >
               {columns.map((c, ci) => (
                 <td
@@ -117,7 +115,7 @@ export function Table<T extends object>({
                     maxWidth: c.maxWidth,
                   }}
                 >
-                  {typeof c.accessor === "function"
+                  {typeof c.accessor === 'function'
                     ? c.accessor(row)
                     : (row[c.accessor] as unknown as React.ReactNode)}
                 </td>
@@ -181,8 +179,7 @@ export function Table<T extends object>({
         {showPageSizeSelector && (
           <div className={styles.pageSizeContainer}>
             <span className={styles.pageSizeInfo}>
-              Showing {pageStart + 1}-
-              {Math.min(pageStart + pageSize, sortedData.length)} of{" "}
+              Showing {pageStart + 1}-{Math.min(pageStart + pageSize, sortedData.length)} of{' '}
               {sortedData.length} items
             </span>
           </div>

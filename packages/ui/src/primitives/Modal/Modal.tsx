@@ -16,7 +16,9 @@ export function Modal({ open, title, onClose, footer, children }: ModalProps) {
       <div className={styles.dialog}>
         <div className={styles.header}>
           <div>{title}</div>
-          <button className={styles.closeBtn} onClick={onClose} aria-label="Close">×</button>
+          <button className={styles.closeBtn} onClick={onClose} aria-label="Close">
+            ×
+          </button>
         </div>
         <div className={styles.body}>{children}</div>
         {footer && <div className={styles.footer}>{footer}</div>}
@@ -24,5 +26,3 @@ export function Modal({ open, title, onClose, footer, children }: ModalProps) {
     </div>
   );
 }
-
-

@@ -1,7 +1,23 @@
-.root { display: grid; gap: 6px; }
-.label { font-weight: 600; }
-.box { border: 1px solid var(--border-color); border-radius: 6px; padding: 8px; background: #fff; }
-.option { display: flex; align-items: center; gap: 8px; padding: 4px 0; }
-.helper { color: var(--gray-font-color); font-size: 12px; }
-
-
+.root {
+  display: grid;
+  gap: 6px;
+}
+.label {
+  font-weight: 600;
+}
+.box {
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 8px;
+  background: #fff;
+}
+.option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+.helper {
+  color: var(--gray-font-color);
+  font-size: 12px;
+}

@@ -1,5 +1,5 @@
-import React from "react";
-import styles from "./Select.module.css";
+import React from 'react';
+import styles from './Select.module.css';
 
 export type SelectOption = { label: string; value: string };
 
@@ -9,14 +9,7 @@ export type SelectProps = React.SelectHTMLAttributes<HTMLSelectElement> & {
   options: SelectOption[];
 };
 
-export function Select({
-  label,
-  helperText,
-  options,
-  id,
-  className,
-  ...rest
-}: SelectProps) {
+export function Select({ label, helperText, options, id, className, ...rest }: SelectProps) {
   const selectId = id || React.useId();
   return (
     <div className={styles.root}>
@@ -36,4 +29,3 @@ export function Select({
     </div>
   );
 }
-

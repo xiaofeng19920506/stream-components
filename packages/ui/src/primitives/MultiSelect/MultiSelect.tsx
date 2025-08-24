@@ -1,5 +1,5 @@
-import React from "react";
-import styles from "./MultiSelect.module.css";
+import React from 'react';
+import styles from './MultiSelect.module.css';
 
 export type MultiSelectOption = { label: string; value: string };
 
@@ -11,13 +11,7 @@ export type MultiSelectProps = {
   onChange: (values: string[]) => void;
 };
 
-export function MultiSelect({
-  label,
-  helperText,
-  options,
-  values,
-  onChange,
-}: MultiSelectProps) {
+export function MultiSelect({ label, helperText, options, values, onChange }: MultiSelectProps) {
   const toggleValue = (val: string) => {
     if (values.includes(val)) {
       onChange(values.filter((v) => v !== val));
@@ -44,4 +38,3 @@ export function MultiSelect({
     </div>
   );
 }
-

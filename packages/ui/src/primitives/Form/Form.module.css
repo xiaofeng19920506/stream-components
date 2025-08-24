@@ -1,6 +1,15 @@
-.form { display: grid; gap: 12px; }
-.row { display: grid; gap: 6px; }
-.label { font-weight: 600; }
-.error { color: var(--alert-color); font-size: 12px; }
-
-
+.form {
+  display: grid;
+  gap: 12px;
+}
+.row {
+  display: grid;
+  gap: 6px;
+}
+.label {
+  font-weight: 600;
+}
+.error {
+  color: var(--alert-color);
+  font-size: 12px;
+}

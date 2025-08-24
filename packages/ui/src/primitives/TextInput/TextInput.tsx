@@ -1,6 +1,6 @@
-import React from "react";
-import clsx from "clsx";
-import styles from "./TextInput.module.css";
+import React from 'react';
+import clsx from 'clsx';
+import styles from './TextInput.module.css';
 
 export type TextInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   label?: string;
@@ -9,14 +9,7 @@ export type TextInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   id?: string;
 };
 
-export function TextInput({
-  label,
-  helperText,
-  error,
-  id,
-  className,
-  ...rest
-}: TextInputProps) {
+export function TextInput({ label, helperText, error, id, className, ...rest }: TextInputProps) {
   const inputId = id || React.useId();
   return (
     <div className={styles.root}>

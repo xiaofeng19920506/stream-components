@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from "react";
-import styles from "./SearchableSelect.module.css";
+import React, { useRef, useEffect } from 'react';
+import styles from './SearchableSelect.module.css';
 
 // Generic type for object options
 export type ObjectOption<T = any> = T & {
@@ -28,7 +28,7 @@ export type SearchableSelectProps<T = any> = {
   value?: string | number | null | (string | number)[]; // Support both single and multiple values
   onChange: (
     value: string | number | null | (string | number)[],
-    option?: ObjectOption<T> | ObjectOption<T>[]
+    option?: ObjectOption<T> | ObjectOption<T>[],
   ) => void;
   placeholder?: string;
   showActionIcons?: boolean;
@@ -45,8 +45,8 @@ export type SearchableSelectProps<T = any> = {
   // Enhanced action button props
   showActionOnFocus?: boolean;
   actionButtonText?: string;
-  actionButtonVariant?: "icon" | "text" | "button";
-  actionButtonSize?: "small" | "medium" | "large";
+  actionButtonVariant?: 'icon' | 'text' | 'button';
+  actionButtonSize?: 'small' | 'medium' | 'large';
   // Enhanced action support
   showOptionActions?: boolean;
   defaultActions?: Array<{
@@ -62,8 +62,8 @@ export type SearchableSelectProps<T = any> = {
   getOptionLabel?: (option: ObjectOption<T>) => string;
   getOptionValue?: (option: ObjectOption<T>) => string | number;
   searchableFields?: (keyof T)[];
-  displayField?: keyof T | "label";
-  valueField?: keyof T | "value";
+  displayField?: keyof T | 'label';
+  valueField?: keyof T | 'value';
   // Multiselect support
   multiselect?: boolean;
   maxSelections?: number;
@@ -77,7 +77,7 @@ export function SearchableSelect<T = any>({
   options = [],
   value,
   onChange,
-  placeholder = "Search...",
+  placeholder = 'Search...',
   showActionIcons = false,
   inputActionIcon,
   onInputActionClick,
@@ -90,22 +90,22 @@ export function SearchableSelect<T = any>({
   emptyActionStyle,
   showActionOnFocus = false,
   actionButtonText,
-  actionButtonVariant = "icon",
-  actionButtonSize = "medium",
+  actionButtonVariant = 'icon',
+  actionButtonSize = 'medium',
   showOptionActions = false,
   defaultActions = [],
   getOptionLabel,
   getOptionValue,
   searchableFields,
-  displayField = "label",
-  valueField = "value",
+  displayField = 'label',
+  valueField = 'value',
   multiselect,
   maxSelections,
   showSelectedCount,
   selectedItemStyle,
   removeIcon,
 }: SearchableSelectProps<T>) {
-  const [query, setQuery] = React.useState("");
+  const [query, setQuery] = React.useState('');
   const [isOpen, setIsOpen] = React.useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -120,12 +120,12 @@ export function SearchableSelect<T = any>({
       return getOptionLabel(option);
     }
 
-    if (displayField === "label") {
-      return option.label || "";
+    if (displayField === 'label') {
+      return option.label || '';
     }
 
     const fieldValue = option[displayField];
-    return fieldValue ? String(fieldValue) : "";
+    return fieldValue ? String(fieldValue) : '';
   };
 
   // Helper function to get option value
@@ -134,36 +134,28 @@ export function SearchableSelect<T = any>({
       return getOptionValue(option);
     }
 
-    if (valueField === "value") {
+    if (valueField === 'value') {
       return option.value;
     }
 
     const fieldValue = option[valueField];
-    return fieldValue !== undefined && fieldValue !== null
-      ? String(fieldValue)
-      : option.value;
+    return fieldValue !== undefined && fieldValue !== null ? String(fieldValue) : option.value;
   };
 
   // Handle multiselect vs single select
   const isMultiselect = multiselect === true;
-  const selectedValues = isMultiselect
-    ? Array.isArray(value)
-      ? value
-      : []
-    : value
-    ? [value]
-    : [];
+  const selectedValues = isMultiselect ? (Array.isArray(value) ? value : []) : value ? [value] : [];
 
   // Find the selected options to display
   const selectedOptions = options?.filter(
-    (option) => option && selectedValues.includes(getValue(option))
+    (option) => option && selectedValues.includes(getValue(option)),
   );
 
   // For multiselect, show selected items as tags and query
   // For single select, use query when user is typing, otherwise show selected option label
   const displayValue = isMultiselect
     ? query
-    : query || (selectedOptions[0] ? getLabel(selectedOptions[0]) : "");
+    : query || (selectedOptions[0] ? getLabel(selectedOptions[0]) : '');
 
   // Check if input is empty (no value selected and no query)
   const isInputEmpty = !displayValue && !query && selectedValues.length === 0;
@@ -175,71 +167,59 @@ export function SearchableSelect<T = any>({
   // Helper function to get action button styles
   const getActionButtonStyles = () => {
     const baseStyles: React.CSSProperties = {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      cursor: "pointer",
-      border: "none",
-      background: "transparent",
-      padding: "0",
-      margin: "0",
-      fontSize: "14px",
-      fontFamily: "inherit",
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      cursor: 'pointer',
+      border: 'none',
+      background: 'transparent',
+      padding: '0',
+      margin: '0',
+      fontSize: '14px',
+      fontFamily: 'inherit',
     };
 
     switch (actionButtonVariant) {
-      case "text":
+      case 'text':
         return {
           ...baseStyles,
-          color: "#007bff",
-          fontWeight: "500",
-          padding: "4px 8px",
-          borderRadius: "4px",
-          transition: "background-color 0.2s",
+          color: '#007bff',
+          fontWeight: '500',
+          padding: '4px 8px',
+          borderRadius: '4px',
+          transition: 'background-color 0.2s',
         };
-      case "button":
+      case 'button':
         return {
           ...baseStyles,
-          backgroundColor: "#007bff",
-          color: "white",
+          backgroundColor: '#007bff',
+          color: 'white',
           padding:
-            actionButtonSize === "small"
-              ? "4px 8px"
-              : actionButtonSize === "large"
-              ? "8px 16px"
-              : "6px 12px",
-          borderRadius: "4px",
+            actionButtonSize === 'small'
+              ? '4px 8px'
+              : actionButtonSize === 'large'
+                ? '8px 16px'
+                : '6px 12px',
+          borderRadius: '4px',
           fontSize:
-            actionButtonSize === "small"
-              ? "12px"
-              : actionButtonSize === "large"
-              ? "16px"
-              : "14px",
-          fontWeight: "500",
-          transition: "background-color 0.2s",
+            actionButtonSize === 'small' ? '12px' : actionButtonSize === 'large' ? '16px' : '14px',
+          fontWeight: '500',
+          transition: 'background-color 0.2s',
         };
-      case "icon":
+      case 'icon':
       default:
         return {
           ...baseStyles,
-          color: "#007bff",
+          color: '#007bff',
           fontSize:
-            actionButtonSize === "small"
-              ? "16px"
-              : actionButtonSize === "large"
-              ? "24px"
-              : "20px",
-          padding: "4px",
+            actionButtonSize === 'small' ? '16px' : actionButtonSize === 'large' ? '24px' : '20px',
+          padding: '4px',
         };
     }
   };
 
   // Helper function to check if a field value matches the search query
-  const fieldMatchesQuery = (
-    option: ObjectOption<T>,
-    field: keyof T,
-    query: string
-  ): boolean => {
+  const fieldMatchesQuery = (option: ObjectOption<T>, field: keyof T, query: string): boolean => {
     const fieldValue = option[field];
     if (fieldValue === undefined || fieldValue === null) return false;
     return String(fieldValue).toLowerCase().includes(query.toLowerCase());
@@ -260,26 +240,21 @@ export function SearchableSelect<T = any>({
 
           // If searchableFields is specified, search only those fields
           if (searchableFields && searchableFields.length > 0) {
-            return searchableFields.some((field) =>
-              fieldMatchesQuery(o, field, q)
-            );
+            return searchableFields.some((field) => fieldMatchesQuery(o, field, q));
           }
 
           // Default search behavior - search in label and value
           const label = getLabel(o);
           const optionValue = getValue(o);
 
-          return (
-            label.toLowerCase().includes(q) ||
-            String(optionValue).toLowerCase().includes(q)
-          );
+          return label.toLowerCase().includes(q) || String(optionValue).toLowerCase().includes(q);
         } catch (error) {
-          console.warn("Error filtering option:", o, error);
+          console.warn('Error filtering option:', o, error);
           return false;
         }
       });
     } catch (error) {
-      console.error("Error in SearchableSelect filter:", error);
+      console.error('Error in SearchableSelect filter:', error);
       return [];
     }
   }, [
@@ -297,27 +272,24 @@ export function SearchableSelect<T = any>({
   // Handle click outside to close dropdown
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     };
 
     // Handle escape key to close dropdown
     const handleEscapeKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+      if (event.key === 'Escape') {
         setIsOpen(false);
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("keydown", handleEscapeKey);
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleEscapeKey);
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleEscapeKey);
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscapeKey);
     };
   }, []);
 
@@ -328,11 +300,7 @@ export function SearchableSelect<T = any>({
     setIsOpen(true);
 
     // For single select, clear selection if user is typing and the value doesn't match the selected option
-    if (
-      !isMultiselect &&
-      selectedOptions[0] &&
-      newValue !== getLabel(selectedOptions[0])
-    ) {
+    if (!isMultiselect && selectedOptions[0] && newValue !== getLabel(selectedOptions[0])) {
       onChange(null);
     }
   };
@@ -353,12 +321,12 @@ export function SearchableSelect<T = any>({
 
         const newSelectedOptions = [...selectedOptions, option];
         onChange(newSelectedValues as (string | number)[], newSelectedOptions);
-        setQuery(""); // Clear query when option is selected
+        setQuery(''); // Clear query when option is selected
         // Keep dropdown open for multiselect
       } else {
         // For single select, replace selection
         onChange(optionValue, option);
-        setQuery(""); // Clear query when option is selected
+        setQuery(''); // Clear query when option is selected
         setIsOpen(false);
       }
     }
@@ -367,12 +335,8 @@ export function SearchableSelect<T = any>({
   // Handle removing a selected item in multiselect mode
   const handleRemoveSelected = (valueToRemove: string | number) => {
     if (isMultiselect) {
-      const newSelectedValues = selectedValues.filter(
-        (v) => v !== valueToRemove
-      );
-      const newSelectedOptions = selectedOptions.filter(
-        (opt) => getValue(opt) !== valueToRemove
-      );
+      const newSelectedValues = selectedValues.filter((v) => v !== valueToRemove);
+      const newSelectedOptions = selectedOptions.filter((opt) => getValue(opt) !== valueToRemove);
       onChange(newSelectedValues as (string | number)[], newSelectedOptions);
     }
   };
@@ -389,7 +353,7 @@ export function SearchableSelect<T = any>({
   const handleEnhancedActionClick = (
     e: React.MouseEvent,
     option: ObjectOption<T>,
-    action: { onClick: (option: ObjectOption<T>) => void; disabled?: boolean }
+    action: { onClick: (option: ObjectOption<T>) => void; disabled?: boolean },
   ) => {
     e.stopPropagation(); // Prevent option selection
     if (!action.disabled && action.onClick) {
@@ -417,7 +381,7 @@ export function SearchableSelect<T = any>({
   const handleFocus = () => {
     setIsOpen(true);
     if (!selectedOptions[0]) {
-      setQuery("");
+      setQuery('');
     }
   };
 
@@ -431,9 +395,7 @@ export function SearchableSelect<T = any>({
   const getOptionActions = (option: ObjectOption<T>) => {
     const optionActions = option.actions || [];
     const allActions = [...optionActions, ...defaultActions];
-    return allActions.filter(
-      (action) => action && (action.icon || action.text)
-    );
+    return allActions.filter((action) => action && (action.icon || action.text));
   };
 
   return (
@@ -458,22 +420,18 @@ export function SearchableSelect<T = any>({
                   }}
                   title="Remove"
                 >
-                  {removeIcon || "×"}
+                  {removeIcon || '×'}
                 </button>
               </span>
             ))}
             {showSelectedCount && (
-              <span className={styles.selectedCount}>
-                {selectedOptions.length} selected
-              </span>
+              <span className={styles.selectedCount}>{selectedOptions.length} selected</span>
             )}
           </div>
         )}
         <input
           className={styles.input}
-          placeholder={
-            isMultiselect && selectedOptions.length > 0 ? "" : placeholder
-          }
+          placeholder={isMultiselect && selectedOptions.length > 0 ? '' : placeholder}
           value={displayValue}
           onChange={handleInputChange}
           onFocus={handleFocus}
@@ -487,7 +445,7 @@ export function SearchableSelect<T = any>({
             onClick={handleEmptyActionClick}
             type="button"
           >
-            {emptyActionIcon || actionButtonText || "+"}
+            {emptyActionIcon || actionButtonText || '+'}
           </button>
         )}
         {isOpen && (
@@ -495,8 +453,7 @@ export function SearchableSelect<T = any>({
             {filtered.map((opt) => {
               const actions = getOptionActions(opt);
               const hasLegacyAction = showActionIcons && opt.actionIcon;
-              const hasEnhancedActions =
-                showOptionActions && actions.length > 0;
+              const hasEnhancedActions = showOptionActions && actions.length > 0;
 
               return (
                 <div
@@ -523,12 +480,10 @@ export function SearchableSelect<T = any>({
                         <div
                           key={index}
                           className={`${styles.actionIcon} ${
-                            action.disabled ? styles.actionIconDisabled : ""
-                          } ${action.className || ""}`}
+                            action.disabled ? styles.actionIconDisabled : ''
+                          } ${action.className || ''}`}
                           style={action.style}
-                          onClick={(e) =>
-                            handleEnhancedActionClick(e, opt, action)
-                          }
+                          onClick={(e) => handleEnhancedActionClick(e, opt, action)}
                           title={action.title}
                         >
                           {action.icon || action.text}
@@ -538,9 +493,7 @@ export function SearchableSelect<T = any>({
                 </div>
               );
             })}
-            {filtered.length === 0 && (
-              <div className={styles.item}>No results</div>
-            )}
+            {filtered.length === 0 && <div className={styles.item}>No results</div>}
           </div>
         )}
       </div>

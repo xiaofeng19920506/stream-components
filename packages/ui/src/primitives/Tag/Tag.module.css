@@ -1,13 +1,18 @@
 .tag {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 2px 8px; border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
   background: var(--alice-blue);
   border: 1px solid var(--border-color);
   color: var(--font-color);
   font-size: 12px;
 }
-.remove { cursor: pointer; color: var(--gray-font-color); }
-.remove:hover { color: var(--alert-color); }
-
-
-
+.remove {
+  cursor: pointer;
+  color: var(--gray-font-color);
+}
+.remove:hover {
+  color: var(--alert-color);
+}

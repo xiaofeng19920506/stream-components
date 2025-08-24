@@ -8,9 +8,44 @@
     "build": "npm run -w @xiaofeng19920506/ui build",
     "storybook": "npm run -w @xiaofeng19920506/ui storybook",
     "build-storybook": "npm run -w @xiaofeng19920506/ui build-storybook",
-    "lint": "echo 'add eslint later'",
-    "format": "echo 'add prettier later'",
-    "test": "echo 'no tests yet'"
+    "lint": "eslint . --max-warnings=0",
+    "format": "prettier --write .",
+    "test": "echo 'no tests yet'",
+    "lint:fix": "eslint . --fix",
+    "format:check": "prettier --check .",
+    "typecheck": "npm run -w @xiaofeng19920506/ui typecheck",
+    "stylelint": "stylelint \"**/*.{css,scss}\" --cache --cache-location .stylelintcache",
+    "stylelint:fix": "stylelint \"**/*.{css,scss}\" --fix",
+    "prepare": "husky"
   },
-  "version": "0.0.1"
+  "version": "0.0.1",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.2",
+    "eslint-import-resolver-typescript": "^3.10.1",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-unused-imports": "^3.2.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.2",
+    "postcss": "^8.5.6",
+    "postcss-scss": "^4.0.9",
+    "prettier": "^3.6.2",
+    "stylelint": "^16.23.1",
+    "stylelint-config-standard": "^36.0.1",
+    "stylelint-declaration-strict-value": "^1.10.11",
+    "stylelint-order": "^6.0.4",
+    "typescript": "^5.9.2"
+  },
+  "lint-staged": {
+    "*": {
+      "{js,jsx,ts,tsx}": "eslint --fix",
+      "{css,scss}": "stylelint --fix",
+      "{md,mdx,json,css,scss,ts,tsx,js,jsx}": "prettier --write"
+    }
+  }
 }
