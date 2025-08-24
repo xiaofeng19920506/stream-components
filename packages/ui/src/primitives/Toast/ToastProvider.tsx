@@ -25,7 +25,10 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     setToasts((prev) => [...prev, { id, ...t }]);
     setTimeout(() => setToasts((prev) => prev.filter((x) => x.id !== id)), 3000);
   }, []);
-  const remove = React.useCallback((id: string) => setToasts((prev) => prev.filter((x) => x.id !== id)), []);
+  const remove = React.useCallback(
+    (id: string) => setToasts((prev) => prev.filter((x) => x.id !== id)),
+    [],
+  );
 
   return (
     <ToastContext.Provider value={{ toasts, notify, remove }}>
@@ -41,5 +44,3 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     </ToastContext.Provider>
   );
 }
-
-

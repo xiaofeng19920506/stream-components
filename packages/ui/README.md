@@ -349,7 +349,7 @@ type SearchableOption = ObjectOption;
 ## Usage
 
 ```tsx
-import { Button, TextInput, Card } from "@xiaofeng19920506/ui";
+import { Button, TextInput, Card } from '@xiaofeng19920506/ui';
 
 function App() {
   return (

@@ -1,0 +1,11 @@
+import{j as e}from"./jsx-runtime-BjG_zV1W.js";import{r as m}from"./index-CvLvJ4fi.js";import{B as i}from"./Button-CBgcc1NY.js";import"./_commonjsHelpers-Cpj98o6Y.js";import"./clsx-B-dksMZM.js";const f="_overlay_9gv10_1",v="_dialog_9gv10_9",_="_header_9gv10_19",h="_body_9gv10_27",g="_footer_9gv10_30",x="_closeBtn_9gv10_37",o={overlay:f,dialog:v,header:_,body:h,footer:g,closeBtn:x};function r({open:n,title:t,onClose:p,footer:a,children:u}){return n?e.jsx("div",{className:o.overlay,role:"dialog","aria-modal":"true",children:e.jsxs("div",{className:o.dialog,children:[e.jsxs("div",{className:o.header,children:[e.jsx("div",{children:t}),e.jsx("button",{className:o.closeBtn,onClick:p,"aria-label":"Close",children:"×"})]}),e.jsx("div",{className:o.body,children:u}),a&&e.jsx("div",{className:o.footer,children:a})]})}):null}r.__docgenInfo={description:"",methods:[],displayName:"Modal",props:{open:{required:!0,tsType:{name:"boolean"},description:""},title:{required:!1,tsType:{name:"string"},description:""},onClose:{required:!0,tsType:{name:"signature",type:"function",raw:"() => void",signature:{arguments:[],return:{name:"void"}}},description:""},footer:{required:!1,tsType:{name:"ReactReactNode",raw:"React.ReactNode"},description:""},children:{required:!1,tsType:{name:"ReactReactNode",raw:"React.ReactNode"},description:""}}};const R={title:"Primitives/Modal",component:r},s={render:()=>{const[n,t]=m.useState(!1);return e.jsxs("div",{children:[e.jsx(i,{onClick:()=>t(!0),children:"Open"}),e.jsx(r,{open:n,onClose:()=>t(!1),title:"Title",footer:e.jsx(i,{onClick:()=>t(!1),children:"Close"}),children:"Content here"})]})}};var l,d,c;s.parameters={...s.parameters,docs:{...(l=s.parameters)==null?void 0:l.docs,source:{originalSource:`{
+  render: () => {
+    const [open, setOpen] = useState(false);
+    return <div>
+        <Button onClick={() => setOpen(true)}>Open</Button>
+        <Modal open={open} onClose={() => setOpen(false)} title="Title" footer={<Button onClick={() => setOpen(false)}>Close</Button>}>
+          Content here
+        </Modal>
+      </div>;
+  }
+}`,...(c=(d=s.parameters)==null?void 0:d.docs)==null?void 0:c.source}}};const O=["Basic"];export{s as Basic,O as __namedExportsOrder,R as default};

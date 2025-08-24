@@ -1,5 +1,5 @@
-import React from "react";
-import styles from "./Tag.module.css";
+import React from 'react';
+import styles from './Tag.module.css';
 
 export type TagProps = {
   children: React.ReactNode;
@@ -11,15 +11,10 @@ export function Tag({ children, onRemove }: TagProps) {
     <span className={styles.tag}>
       {children}
       {onRemove && (
-        <button
-          className={styles.remove}
-          onClick={onRemove}
-          aria-label="Remove tag"
-        >
+        <button className={styles.remove} onClick={onRemove} aria-label="Remove tag">
           ×
         </button>
       )}
     </span>
   );
 }
-

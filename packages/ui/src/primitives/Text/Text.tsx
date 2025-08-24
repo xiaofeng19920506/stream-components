@@ -17,6 +17,3 @@ export function Text({ as: Tag = 'p', variant = 'body', className, children, ...
     </Tag>
   );
 }
-
-
-

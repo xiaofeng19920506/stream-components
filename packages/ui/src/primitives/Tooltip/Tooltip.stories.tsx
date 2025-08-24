@@ -1,8 +1,8 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Tooltip } from "./Tooltip";
+import type { Meta, StoryObj } from '@storybook/react';
+import { Tooltip } from './Tooltip';
 
 const meta: Meta<typeof Tooltip> = {
-  title: "Primitives/Tooltip",
+  title: 'Primitives/Tooltip',
   component: Tooltip,
 };
 
@@ -11,18 +11,17 @@ type Story = StoryObj<typeof Tooltip>;
 
 export const HoverTop: Story = {
   args: {
-    content: "Tooltip",
+    content: 'Tooltip',
     children: <button>Hover me</button>,
-    placement: "top",
+    placement: 'top',
   },
 };
 
 export const ClickRight: Story = {
   args: {
-    content: "Tooltip",
+    content: 'Tooltip',
     children: <button>Click me</button>,
-    placement: "right",
-    trigger: "click",
+    placement: 'right',
+    trigger: 'click',
   },
 };
-

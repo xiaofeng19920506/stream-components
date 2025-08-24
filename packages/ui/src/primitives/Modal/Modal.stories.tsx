@@ -1,10 +1,10 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { useState } from "react";
-import { Modal } from "./Modal";
-import { Button } from "../Button/Button";
+import type { Meta, StoryObj } from '@storybook/react';
+import { useState } from 'react';
+import { Modal } from './Modal';
+import { Button } from '../Button/Button';
 
 const meta: Meta<typeof Modal> = {
-  title: "Primitives/Modal",
+  title: 'Primitives/Modal',
   component: Modal,
 };
 
@@ -29,4 +29,3 @@ export const Basic: Story = {
     );
   },
 };
-

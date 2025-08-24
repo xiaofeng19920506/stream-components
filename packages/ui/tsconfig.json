@@ -11,10 +11,5 @@
     "moduleResolution": "NodeNext"
   },
   "include": ["src"],
-  "exclude": [
-    "src/**/*.stories.*",
-    "src/**/*.mdx"
-  ]
+  "exclude": ["src/**/*.stories.*", "src/**/*.mdx"]
 }
-
-

@@ -1,4 +1,7 @@
-.wrapper { position: relative; display: inline-block; }
+.wrapper {
+  position: relative;
+  display: inline-block;
+}
 .bubble {
   position: absolute;
   left: 50%;
@@ -14,15 +17,37 @@
   z-index: 50;
   opacity: 0;
   pointer-events: none;
-  transition: opacity .15s ease;
+  transition: opacity 0.15s ease;
 }
-.wrapper:hover .bubble { opacity: 1; }
+.wrapper:hover .bubble {
+  opacity: 1;
+}
 
 /* Visibility and placements */
-.visible { opacity: 1; pointer-events: auto; }
-.top { left: 50%; bottom: calc(100% + 8px); transform: translateX(-50%); }
-.bottom { left: 50%; top: calc(100% + 8px); transform: translateX(-50%); }
-.left { right: calc(100% + 8px); top: 50%; left: auto; bottom: auto; transform: translateY(-50%); }
-.right { left: calc(100% + 8px); top: 50%; bottom: auto; transform: translateY(-50%); }
-
-
+.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.top {
+  left: 50%;
+  bottom: calc(100% + 8px);
+  transform: translateX(-50%);
+}
+.bottom {
+  left: 50%;
+  top: calc(100% + 8px);
+  transform: translateX(-50%);
+}
+.left {
+  right: calc(100% + 8px);
+  top: 50%;
+  left: auto;
+  bottom: auto;
+  transform: translateY(-50%);
+}
+.right {
+  left: calc(100% + 8px);
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%);
+}
